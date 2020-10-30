@@ -71,22 +71,32 @@ tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5),0)
 #10-15 minutes driving, I will assume the full hour is parked + the energy
 #to drive - energy use may be a little on the high side with this calc
 
-tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside temp
+
 
 #add a garage option for overnight parking
 garage = st.checkbox("I park in a garage overnight.")
+tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside temp
 if garage:
-    Temp_g = st.slider('what temperature is your garage kept at?', value = 50, max_value = 80)
+    Temp_g = st.slider('what temperature is your garage kept at in the winter?', value = 50, max_value = 80)
 
-    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp:
+    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp if gargage temp < outside temp:
     tmy['t_park'] = tmy['t_park'].where(
-            (tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)), Temp_g)
+        ((tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)))|(tmy.t_park > Temp_g), Temp_g)
 
 # # Use the relationship between temperature and energy use to find the total energy use
 
 #from CEA's Wattson:  to condition battery while parked: 
 # parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
 #less than 0!
+
+# where the time is at or after 8:30 and before or at 17:30, energy use during parking is ??, otherwise it is ??
+
+#https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
+    #the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside at -4F, which might be a little to a lot less than
+    #below depending on how many kWh the range corresponds to (temperature adjusted or not??)
+    #I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.  The below gives me ~0.56kWh/hr
+    tmy['t_park'] = tmy['t_park'].where(
+        ((tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)))|(tmy.t_park > Temp_g), Temp_g)
 tmy['parke'] = tmy['t_park'] * -.0092 + .5206
 tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
@@ -108,14 +118,11 @@ tmy['kwh']= epm_t*tmy['miles']
 tmy['kwh'] = tmy.kwh + tmy.parke
 
 #toplot=tmy['2018-5-23':'2018-5-30']
-#plt.plot(toplot.index, toplot.kwh) - maybe edit to plot with streamlit!
+#plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
 
 #total cost to drive for a year:
 coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-total_cost_ev = coe*tmy.sum()[7]
-
-#the part just from driving:
-#(tmy.sum()[7]-tmy.sum()[5])*coe
+total_cost_ev = coe*tmy.kwh.sum()
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
@@ -133,6 +140,8 @@ total_cost_gas = tmy.gas.sum()*dpg
 #plugged in for 2 hours a day:
 kwh_block = .4*2*120
 cost_block = .2*kwh_block
+if garage:
+    cost_block = 0
 
 #now look at ghg emissions:
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
@@ -148,9 +157,11 @@ ghg_ice = 8.887*tmy.gas.sum()
 cea_pkwh = .86*.5 + .11*.03 + .3*.02
 #update the above with sliders for coal, gas, hydro, etc maybe?  Or choose your utility (cost too)
 
-ghg_ev = cea_pkwh*tmy.sum()[7]
+ghg_ev = cea_pkwh*tmy.kwh.sum()
 
 ghg_block = cea_pkwh*kwh_block
+if garage:
+    ghg_block = 0
 
 
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
