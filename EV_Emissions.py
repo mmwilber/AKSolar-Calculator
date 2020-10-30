@@ -111,8 +111,14 @@ total_cost_ev = coe*tmy.sum()[7]
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
 dpg = st.slider('what is the price of gas?', value = 2.5, max_value = 10.0)
-gas_g = tmy.sum()[4]/mpg
-total_cost_gas = gas_g*dpg
+#make this temperature dependent too like above.
+#according to fueleconomy.gov, an ICE can have 15 to 25% lower mpg at 20F than 77F. the 25% is for trips under 3-4 miles, so could adjust the below later for this
+#for now I am just using 20% less
+tmy['mpg'] = mpg
+tmy['mpg'] = tmy['mpg'].where((tmy['db_temp'] > 77), mpg - .2*mpg*(77-tmy['db_temp'])/57)
+
+tmy['gas'] = tmy.miles/tmy.mpg
+total_cost_gas = tmy.gas.sum()*dpg
 
 #what about the engine block heater?  Say 120 days (really less),
 #plugged in for 2 hours a day:
@@ -121,7 +127,7 @@ cost_block = .2*kwh_block
 
 #now look at ghg emissions:
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
-ghg_ice = 8.887*gas_g
+ghg_ice = 8.887*tmy.gas.sum()
 
 #from R Dones et al Greenhouse Gas Emissions from Energy Systems: Comparison and Overview 
 #table 2 and text
