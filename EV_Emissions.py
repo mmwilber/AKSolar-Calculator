@@ -21,10 +21,7 @@ import requests
 base_url = 'http://ak-energy-data.analysisnorth.com/'
 
 
-# # Use some of Alan's code from the heat pump calculator (github) to download tmy files for hourly temperature
-
-# In[295]:
-
+# # Use some of Alan Mitchells's code from the heat pump calculator (github) to download tmy files for hourly temperature
 
 def get_df(file_path):
     """Returns a Pandas DataFrame that is found at the 'file_path'
@@ -35,10 +32,6 @@ def get_df(file_path):
     df = pd.read_pickle(io.BytesIO(b), compression='bz2')
     return df
 
-
-# In[296]:
-
-
 @functools.lru_cache(maxsize=50)    # caches the TMY dataframes cuz retrieved remotely
 def tmy_from_id(tmy_id):
     """Returns a DataFrame of TMY data for the climate site identified
@@ -46,10 +39,6 @@ def tmy_from_id(tmy_id):
     """
     df = get_df(f'wx/tmy3/proc/{tmy_id}.pkl')
     return df
-
-
-# In[297]:
-
 
 # There is a file with summary info about each site 
 # available.
@@ -62,8 +51,6 @@ tmy = tmy_from_id(702730)
 
 
 # # put together a driving profile
-
-# In[300]:
 
 owcommute = st.slider('How far do you live from work?', value = 5)
 tmy['miles'] = 0
@@ -114,7 +101,7 @@ coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, val
 total_cost_ev = coe*tmy.sum()[7]
 
 #the part just from driving:
-(tmy.sum()[7]-tmy.sum()[5])*coe
+#(tmy.sum()[7]-tmy.sum()[5])*coe
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
