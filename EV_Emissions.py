@@ -89,14 +89,12 @@ if garage:
 # parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
 #less than 0!
 
-# where the time is at or after 8:30 and before or at 17:30, energy use during parking is ??, otherwise it is ??
 
 #https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
     #the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside at -4F, which might be a little to a lot less than
     #below depending on how many kWh the range corresponds to (temperature adjusted or not??)
     #I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.  The below gives me ~0.56kWh/hr
-    tmy['t_park'] = tmy['t_park'].where(
-        ((tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)))|(tmy.t_park > Temp_g), Temp_g)
+
 tmy['parke'] = tmy['t_park'] * -.0092 + .5206
 tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
