@@ -148,7 +148,9 @@ st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
 st.write("Total cost of ICE fuel = $", round(total_cost_gas+cost_block,2))
 st.write("Total kg CO2 EV = ", round(ghg_ev,2))
 st.write("Total kg CO2 ICE = ", round(ghg_ice + ghg_block,2))
-
+st.write(" ")
+st.write("Your personal driving habits and other real world conditions could change these results dramatically! ")
+st.write("Also, the underlying assumptions will be updated as we get better data. ")
 
 
 
