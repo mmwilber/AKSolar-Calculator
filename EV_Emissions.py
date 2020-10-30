@@ -71,15 +71,22 @@ tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5),0)
 #10-15 minutes driving, I will assume the full hour is parked + the energy
 #to drive - energy use may be a little on the high side with this calc
 
+#add a garage option for overnight parking
+garage = st.checkbox("I park in a garage overnight.")
+if garage:
+    Temp_g = st.slider('what temperature is your garage kept at?', value = 5, max_value = 80)
+    tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside temp
+    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp:
+    tmy['t_park'] = tmy['t_park'].where(
+            (tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)), Temp_g)
 
 # # Use the relationship between temperature and energy use to find the total energy use
 
 #from CEA's Wattson:  to condition battery while parked: 
 # parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
 #less than 0!
-tmy['parke'] = tmy['db_temp'] * -.0092 + .5206
+tmy['parke'] = tmy['t_park'] * -.0092 + .5206
 tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
-#tmy['parke'] = tmy['parke'].where(tmy['parke'] < .06,.06) #this is for storage in 50F garage - take out if parked outside
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
