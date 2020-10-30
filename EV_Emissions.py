@@ -50,7 +50,7 @@ tmy = tmy_from_id(702730)
 #note: the temperatures are in F :)
 
 st.write("This is calculator to find out how much it would cost to charge an EV at home in Anchorage, Alaska, and what the carbon emissions would be.")
-st.write("It assumes that the only driving is to and from work Monday through Friday.")
+st.write("It assumes that the only driving is to and from work Monday through Friday, and that the vehicle is always parked outside")
 st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development and other communities in Alaska will be added.")
 st.write("Base assumptions and data will be modified as research continues!")
