@@ -57,7 +57,7 @@ st.write("Base assumptions and data will be modified as research continues!")
 
 # # put together a driving profile
 
-owcommute = (st.slider('How many miles do you drive each weekday?', value = 10))/5
+owcommute = (st.slider('How many miles do you drive each weekday?', value = 10))/2
 tmy['miles'] = 0
 #I'm going to put in a 'normal' commute of x miles at 8:30am and 5 miles at 5:30pm M-F
 tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(8, 30)),owcommute)
