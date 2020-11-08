@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
+# to add:  other cities in AK
+#ability to choose how long you use block heater, size of block heater, how long idle for ICE
+#weekend miles
+#assume 30mph (or ask?) and subtract off travel time from parked time.
 import os
 import io
 import math
@@ -42,18 +44,30 @@ def tmy_from_id(tmy_id):
 
 # There is a file with summary info about each site 
 # available.
-df = get_df('wx/tmy3/proc/tmy3_meta.pkl')
-df.head()
+#df = get_df('wx/tmy3/proc/tmy3_meta.pkl')
+#df.head()
 
-#get the tmy for Anchorage
-tmy = tmy_from_id(702730)
-#note: the temperatures are in F :)
+
 
 st.write("This is calculator to find out how much it would cost to charge an EV at home in Anchorage, Alaska, and what the carbon emissions would be.")
 st.write("It assumes that the only driving is to and from work Monday through Friday.")
 st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development and other communities in Alaska will be added.")
 st.write("Base assumptions and data will be modified as research continues!")
+
+#location
+#get the Alaska city data
+# Access as a Pandas DataFrame
+dfc = get_df('city-util/proc/city.pkl')
+city = st.selectbox('Select your community:', dfc['Name'] )
+tmyid = dfc['TMYid'].loc[dfc['Name']=city]
+#get the tmy for Anchorage
+#tmy = tmy_from_id(702730)
+
+#get the tmy for the community chosen:
+tmy = tmy_from_id(tmyid)
+#note: the temperatures are in F :)
+
 
 # # put together a driving profile
 
