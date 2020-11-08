@@ -171,6 +171,7 @@ util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a ut
 cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 st.write("kg of CO2 per kWh for utility:", round(cpkwh,3))
 st.write("utility ID", util)
+st.write(city)
 ghg_ev = cpkwh*tmy.kwh.sum()
 
 ghg_block = cpkwh*kwh_block
