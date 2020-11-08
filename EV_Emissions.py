@@ -60,9 +60,9 @@ st.write("Base assumptions and data will be modified as research continues!")
 # Access as a Pandas DataFrame
 dfc = get_df('city-util/proc/city.pkl')
 dfc.reset_index(inplace = True)
-cities = dfc['aris_city']
+cities = dfc['aris_city'].sort_values()
 city = st.selectbox('Select your community:', cities )
-tmyid = dfc['TMYid'].loc[dfc['aris_city']==city][0]
+tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0]
 #get the tmy for Anchorage
 #tmy = tmy_from_id(702730)
 
