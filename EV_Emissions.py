@@ -44,6 +44,7 @@ def tmy_from_id(tmy_id):
 st.write("This is calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development.")
+st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of data")
 st.write("Base assumptions and data will be modified as research continues!")
 
 #location
@@ -109,8 +110,8 @@ tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
-epm = st.slider('enter the kWh/mile of the EV to investigate. A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
-st.write("use the rated value above, this calculator internally adjusts for the effect of temperature on the kWh/mile.")
+epm = st.slider('enter the Rated kWh/mile of the EV to investigate, this calculator internally adjusts for the effect of temperature. A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
+
 
 # if T < -9.4F, RL = .59 (probably not totally flat, but don't have data now)
 #if -9.4F < T < 73.4, RL = -.007 T(F) + .524
@@ -163,12 +164,19 @@ ghg_ice = 8.887*tmy.gas.sum()
 #wind = .01 - .02
 #PV = .079
 #CEA website: in 2016 86%gas, 11%hydro, 3%wind
-cea_pkwh = .86*.5 + .11*.03 + .3*.02
+#cea_pkwh = .86*.5 + .11*.03 + .3*.02
 #update the above with sliders for coal, gas, hydro, etc maybe?  Or choose your utility (cost too)
 
-ghg_ev = cea_pkwh*tmy.kwh.sum()
+# Access Alan's Alaska utility data as a Pandas DataFrame
+dfu = get_df('city-util/proc/utility.pkl')
 
-ghg_block = cea_pkwh*kwh_block
+util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
+cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
+
+
+ghg_ev = cpkwh*tmy.kwh.sum()
+
+ghg_block = cpkwh*kwh_block
 if garage:
     ghg_block = 0
 
