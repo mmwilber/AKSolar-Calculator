@@ -44,7 +44,7 @@ def tmy_from_id(tmy_id):
 st.write("This is calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development.")
-st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of data")
+st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of date")
 st.write("Base assumptions and data will be modified as research continues!")
 
 #location
@@ -172,7 +172,7 @@ dfu = get_df('city-util/proc/utility.pkl')
 
 util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
 cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
-
+st.write("kg of CO2 per kWh for utility:", round(cpkwh,3))
 
 ghg_ev = cpkwh*tmy.kwh.sum()
 
