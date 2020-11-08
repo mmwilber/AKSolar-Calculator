@@ -1,4 +1,3 @@
-# to add:  other cities in AK
 #ability to choose how long you use block heater, size of block heater, how long idle for ICE
 #weekend miles
 #assume 30mph (or ask?) and subtract off travel time from parked time.
@@ -42,25 +41,19 @@ def tmy_from_id(tmy_id):
     df = get_df(f'wx/tmy3/proc/{tmy_id}.pkl')
     return df
 
-# There is a file with summary info about each site 
-# available.
-#df = get_df('wx/tmy3/proc/tmy3_meta.pkl')
-#df.head()
-
-
-
-st.write("This is calculator to find out how much it would cost to charge an EV at home in Anchorage, Alaska, and what the carbon emissions would be.")
-st.write("It assumes that the only driving is to and from work Monday through Friday.")
+st.write("This is calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
-st.write("This project is still in development and other communities in Alaska will be added.")
+st.write("This project is still in development.")
 st.write("Base assumptions and data will be modified as research continues!")
 
 #location
 #get the Alaska city data
 # Access as a Pandas DataFrame
 dfc = get_df('city-util/proc/city.pkl')
+
+#now create a drop down menu of the available communities and find the corresponding TMYid
 dfc.reset_index(inplace = True)
-cities = dfc['aris_city'].sort_values()
+cities = dfc['aris_city'].drop_duplicates().sort_values()
 city = st.selectbox('Select your community:', cities )
 tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0]
 #get the tmy for Anchorage
@@ -117,6 +110,8 @@ tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
 epm = st.slider('enter the kWh/mile of the EV to investigate. A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
+st.write("use the rated value above, this calculator internally adjusts for the effect of temperature on the kWh/mile.")
+
 # if T < -9.4F, RL = .59 (probably not totally flat, but don't have data now)
 #if -9.4F < T < 73.4, RL = -.007 T(F) + .524
 #if 73.4 < T, RL = 0
