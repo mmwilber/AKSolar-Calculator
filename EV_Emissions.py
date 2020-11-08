@@ -73,7 +73,7 @@ tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(17, 30))|(tm
 tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(8, 30)),weekend)
 tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(17, 30)),weekend)
 
-
+st.write("Total yearly miles driven:", tmy['miles'].sum())
 #I could also enter or assume an average speed to calculate how much 
 #of the hour is spent driving vs parked, but for now, with only about 
 #10-15 minutes driving, I will assume the full hour is parked + the energy
@@ -171,8 +171,8 @@ dfu = get_df('city-util/proc/utility.pkl')
 util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
 cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 st.write("kg of CO2 per kWh for utility:", round(cpkwh,3))
-st.write("utility ID", util)
-st.write(city)
+
+
 ghg_ev = cpkwh*tmy.kwh.sum()
 
 ghg_block = cpkwh*kwh_block
