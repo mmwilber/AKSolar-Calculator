@@ -59,7 +59,7 @@ st.write("Base assumptions and data will be modified as research continues!")
 #get the Alaska city data
 # Access as a Pandas DataFrame
 dfc = get_df('city-util/proc/city.pkl')
-city = st.selectbox('Select your community:', dfc['Name'] )
+city = st.selectbox('Select your community:', dfc['aris_city'] )
 tmyid = dfc['TMYid'].loc[dfc['Name']==city]
 #get the tmy for Anchorage
 #tmy = tmy_from_id(702730)
