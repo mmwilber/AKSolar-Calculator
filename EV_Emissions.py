@@ -57,8 +57,6 @@ dfc.reset_index(inplace = True)
 cities = dfc['aris_city'].drop_duplicates().sort_values()
 city = st.selectbox('Select your community:', cities )
 tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0]
-#get the tmy for Anchorage
-#tmy = tmy_from_id(702730)
 
 #get the tmy for the community chosen:
 tmy = tmy_from_id(tmyid)
@@ -66,7 +64,6 @@ tmy = tmy_from_id(tmyid)
 
 
 # # put together a driving profile
-
 owcommute = (st.slider('How many miles do you drive each weekday?', value = 10))/2
 tmy['miles'] = 0
 #I'm going to put in a 'normal' commute of x miles at 8:30am and 5 miles at 5:30pm M-F
@@ -173,14 +170,14 @@ dfu = get_df('city-util/proc/utility.pkl')
 util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
 cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 st.write("kg of CO2 per kWh for utility:", round(cpkwh,3))
-
+st.write("utility ID", util)
 ghg_ev = cpkwh*tmy.kwh.sum()
 
 ghg_block = cpkwh*kwh_block
 if garage:
     ghg_block = 0
 
-
+st.write("")
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
 st.write("Total cost of ICE fuel = $", round(total_cost_gas+cost_block,2))
 st.write("Total kg CO2 EV = ", round(ghg_ev,2))
