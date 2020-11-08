@@ -62,7 +62,7 @@ dfc = get_df('city-util/proc/city.pkl')
 dfc.reset_index(inplace = True)
 cities = dfc['aris_city']
 city = st.selectbox('Select your community:', cities )
-tmyid = dfc['TMYid'].loc[dfc['Name']==city]
+tmyid = dfc['TMYid'].loc[dfc['aris_city']==city]
 #get the tmy for Anchorage
 #tmy = tmy_from_id(702730)
 
