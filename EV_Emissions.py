@@ -56,6 +56,7 @@ dfc = get_df('city-util/proc/city.pkl')
 dfc.reset_index(inplace = True)
 cities = dfc['aris_city'].drop_duplicates().sort_values()
 city = st.selectbox('Select your community:', cities )
+st.write(city)
 tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0]
 
 #get the tmy for the community chosen:
