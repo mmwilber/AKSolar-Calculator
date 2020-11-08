@@ -53,11 +53,9 @@ st.write("Base assumptions and data will be modified as research continues!")
 dfc = get_df('city-util/proc/city.pkl')
 
 #now create a drop down menu of the available communities and find the corresponding TMYid
-dfc.reset_index(inplace = True)
-cities = dfc['aris_city'].drop_duplicates().sort_values(ignore_index = True)
-city = st.selectbox('Select your community:', cities )
-st.write(city)
-tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0]
+cities = dfc['aris_city'].drop_duplicates().sort_values(ignore_index = True) #get a list of community names
+city = st.selectbox('Select your community:', cities ) #make a drop down list and get choice
+tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0] #find the corresponding TMYid
 
 #get the tmy for the community chosen:
 tmy = tmy_from_id(tmyid)
@@ -65,13 +63,15 @@ tmy = tmy_from_id(tmyid)
 
 
 # # put together a driving profile
-owcommute = (st.slider('How many miles do you drive each weekday?', value = 10))/2
+owcommute = (st.slider('How many miles do you drive each weekday, on average?', value = 10))/2
+weekend = (st.slider('How many miles do you drive each weekend day, on average?', value = 10))/2
 tmy['miles'] = 0
-#I'm going to put in a 'normal' commute of x miles at 8:30am and 5 miles at 5:30pm M-F
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(8, 30)),owcommute)
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(17, 30)),owcommute)
-#that took care of times, but now correct for weekends:
-tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5),0)
+#Assume a 'normal' commute of x miles at 8:30am and 5 miles at 5:30pm M-F
+tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(8, 30))|(tmy.index.dayofweek > 4),owcommute)
+tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(17, 30))|(tmy.index.dayofweek > 4),owcommute)
+#that took care of times, but now for weekends, use the same times for simplicity:
+tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(8, 30)),weekend)
+tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(17, 30)),weekend)
 
 
 #I could also enter or assume an average speed to calculate how much 
