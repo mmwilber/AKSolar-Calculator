@@ -149,7 +149,7 @@ cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kW
 cpkwh_default = float(cpkwh_default)
 cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
-                  "but might be a couple of years out of date):", max_value = 10.0, value = cpkwh_default)
+                  "but might be a couple of years out of date):", max_value = 2.0, value = cpkwh_default)
 
 
 #comparison to gas:
