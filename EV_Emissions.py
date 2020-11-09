@@ -111,7 +111,12 @@ if garage:
 
 #I have some messy data from 4 Alaskan Teslas as well, and adding to the Bolt data, here is
 #the trend I get - it gives the EV a bit more benefit of the doubt!
-tmy['parke'] = tmy['t_park'] * -.005 + .341
+#tmy['parke'] = tmy['t_park'] * -.005 + .341
+#the most generous relationship that this data seems to allow is:
+#I am also working to match real yearly avg kwh/mile for a Tesla in Fairbanks, and it does look
+#like my cold weather impacts have been a bit harsher than reality, at least for energy while parked,
+#which is why I am trying to find a data-supported relationship that matches what I see in that data
+tmy['parke'] = tmy['t_park'] * -.004 + .25
 tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0) #make sure this isn't less than zero!
 
 tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during the hour spent parked
