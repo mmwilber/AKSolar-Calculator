@@ -213,7 +213,7 @@ st.write("Total kg CO2 ICE = ", round(ghg_ice + ghg_block,2))
 st.write(" ")
 st.write("Your personal driving habits and other real world conditions could change these results dramatically! ")
 st.write("Also, the underlying assumptions will be updated as we get better data. ")
-
-
-
+st.write("Thanks to Alan Mitchell of Analysis North for Alaskan utility data, tmy files, and wonderful code to access and use them all.")
+st.write("see http://ak-energy-data.analysisnorth.com and https://github.com/alanmitchell/heat-pump-calc")
+st.write("and definitely check out the Alaskan Heat Pump Calculator at https://heatpump.cf to see if you should get a heat pump!")
 
