@@ -93,7 +93,7 @@ tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside te
 if garage:
     Temp_g = st.slider('what temperature is your garage kept at in the winter?', value = 50, max_value = 80)
 
-    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp if gargage temp < outside temp:
+    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp if garage temp < outside temp:
     tmy['t_park'] = tmy['t_park'].where(
         ((tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)))|(tmy.t_park > Temp_g), Temp_g)
 
@@ -114,7 +114,9 @@ tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
-epm = st.slider('enter the Rated kWh/mile of the EV to investigate, this calculator internally adjusts for the effect of temperature. A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
+epm = st.slider('enter the Rated kWh/mile of the EV to investigate, '
+                'this calculator internally adjusts for the effect of temperature. '
+                'A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
 
 
 # if T < -9.4F, RL = .59 (probably not totally flat, but don't have data now)
@@ -134,9 +136,20 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 #toplot=tmy['2018-5-23':'2018-5-30']
 #plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
 
-#total cost to drive for a year:
+#total cost to drive EV for a year:
 coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, value = .2)
 total_cost_ev = coe*tmy.kwh.sum()
+
+#greenhouse gas emissions from electricity:
+# Access Alan's Alaska utility data as a Pandas DataFrame
+dfu = get_df('city-util/proc/utility.pkl')
+
+util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
+cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
+cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
+                  "(if you don't know, leave it at the default value here, which is specific to you community "
+                  "but might be a couple of years out of date:", max_value = 10, value = cpkwh_default)
+
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
@@ -161,22 +174,8 @@ if garage:
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
 ghg_ice = 8.887*tmy.gas.sum()
 
-#from R Dones et al Greenhouse Gas Emissions from Energy Systems: Comparison and Overview 
-#table 2 and text
-#the best combined cycle gas plants emit .420kg/kWh, avg more like .5
-#hydro = .003 to .03 kg/kWh
-#wind = .01 - .02
-#PV = .079
-#CEA website: in 2016 86%gas, 11%hydro, 3%wind
-#cea_pkwh = .86*.5 + .11*.03 + .3*.02
-#update the above with sliders for coal, gas, hydro, etc maybe?  Or choose your utility (cost too)
 
-# Access Alan's Alaska utility data as a Pandas DataFrame
-dfu = get_df('city-util/proc/utility.pkl')
 
-util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
-cpkwh = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
-st.write("kg of CO2 per kWh for utility:", round(cpkwh,3))
 
 
 ghg_ev = cpkwh*tmy.kwh.sum()
@@ -185,8 +184,6 @@ ghg_block = cpkwh*kwh_block
 if garage:
     ghg_block = 0
 
-st.write("hours parked", tmy.parktime.sum())
-st.write("hours driving", tmy.drivetime.sum())
 st.write("")
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
 st.write("Total cost of ICE fuel = $", round(total_cost_gas+cost_block,2))
