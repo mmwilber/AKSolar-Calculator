@@ -149,7 +149,7 @@ cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kW
 cpkwh_default = float(cpkwh_default)
 cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
-                  "but might be a couple of years out of date):", max_value = 2.0, value = cpkwh_default)
+                  "but might be a couple of years out of date)?:", max_value = 2.0, value = cpkwh_default)
 
 
 #comparison to gas:
@@ -180,7 +180,7 @@ if plug:
 else:
     kwh_block = 0
 cost_block = coe*kwh_block
-idle = st.slider("how many minutes do you idle your gas car on cold days (to warm up or keep your car warm)?", max = 500, value = 5)
+idle = st.slider("how many minutes do you idle your gas car on cold days (to warm up or keep your car warm)?", max_value = 500, value = 5)
 idleg = .2*idle/60*plug_days #cars use about .2g/hr or more at idle : https://www.chicagotribune.com/autos/sc-auto-motormouth-0308-story.html
 
 total_cost_gas = (tmy.gas.sum()+idleg)*dpg
