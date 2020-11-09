@@ -74,12 +74,18 @@ tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  
 tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(17, 30)),weekend)
 
 st.write("Total yearly miles driven:", tmy['miles'].sum())
-#I could also enter or assume an average speed to calculate how much 
-#of the hour is spent driving vs parked, but for now, with only about 
-#10-15 minutes driving, I will assume the full hour is parked + the energy
-#to drive - energy use may be a little on the high side with this calc
 
+# assume an average speed to calculate how much of the hour is spent driving vs parked
+speed = 30
+tmy['drivetime'] = tmy['miles'] / speed  # make a new column for time spent driving in fraction of an hour
 
+# if time is greater than an hour, we need to also mark sequential hours with correct amount
+
+for i, t in enumerate(tmy['drivetime']):
+    if t > 1:
+        tmy.drivetime.iloc[i + 1] = tmy.drivetime.iloc[i + 1] + tmy.drivetime.iloc[i] - 1
+        tmy.drivetime.iloc[i] = 1
+tmy['parktime'] =1- tmy['drivetime']
 
 #add a garage option for overnight parking
 garage = st.checkbox("I park in a garage overnight.")
@@ -103,7 +109,7 @@ if garage:
     #below depending on how many kWh the range corresponds to (temperature adjusted or not??)
     #I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.  The below gives me ~0.56kWh/hr
 
-tmy['parke'] = tmy['t_park'] * -.0092 + .5206
+tmy['parke'] = (tmy['t_park'] * -.0092 + .5206)*tmy['parktime'] #linear relationship of energy use with temperature adjusted for amount of time during the hour spent parked
 tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
 #if driving:
