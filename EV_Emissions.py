@@ -148,7 +148,7 @@ util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a ut
 cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to you community "
-                  "but might be a couple of years out of date:", max_value = 10.0, value = 1)#cpkwh_default)
+                  "but might be a couple of years out of date:", max_value = 10.0, value = 1.0)#cpkwh_default)
 
 
 #comparison to gas:
