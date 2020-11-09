@@ -173,7 +173,7 @@ plug_days = tmy_12.plug.sum()
 plug = st.checkbox("I have a block heater on my gas car.")
 
 if plug:
-    st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 50F")
+    st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 20F")
     plug_hrs = st.slider("how many hours do you plug in your block heater each day?", max_value = 24, value = 2)
     plug_w = st.slider("how many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
     kwh_block = plug_w/1000*plug_hrs*plug_days
