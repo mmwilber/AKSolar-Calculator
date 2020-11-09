@@ -102,15 +102,19 @@ if garage:
 #from CEA's Wattson:  to condition battery while parked: 
 # parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
 #less than 0!
-
-
 #https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
     #the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside at -4F, which might be a little to a lot less than
     #below depending on how many kWh the range corresponds to (temperature adjusted or not??)
     #I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.  The below gives me ~0.56kWh/hr
 
-tmy['parke'] = (tmy['t_park'] * -.0092 + .5206)*tmy['parktime'] #linear relationship of energy use with temperature adjusted for amount of time during the hour spent parked
-tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
+#tmy['parke'] = tmy['t_park'] * -.0092 + .5206 #linear relationship of energy use with temperature
+
+#I have some messy data from 4 Alaskan Teslas as well, and adding to the Bolt data, here is
+#the trend I get - it gives the EV a bit more benefit of the doubt!
+tmy['parke'] = tmy['t_park'] * -.005 + .341
+tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0) #make sure this isn't less than zero!
+
+tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during the hour spent parked
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
