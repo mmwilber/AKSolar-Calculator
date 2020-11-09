@@ -164,26 +164,30 @@ tmy['mpg'] = tmy['mpg'].where((tmy['db_temp'] > 77), mpg - .2*mpg*(77-tmy['db_te
 tmy['gas'] = tmy.miles/tmy.mpg
 total_cost_gas = tmy.gas.sum()*dpg
 
-#what about the engine block heater?  Say 120 days (really less),
-#plugged in for 2 hours a day:
-kwh_block = .4*2*120
-cost_block = .2*kwh_block
-if garage:
-    cost_block = 0
+#what about the engine block heater?
+plug = st.checkbox("I have a block heater on my gas car.")
+if plug:
+    st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 50F")
+    tmy_12 = tmy[['db_temp']].resample('D', label = 'right').min()
+    tmy_12['plug'] = 0
+    tmy_12['plug'] = tmy_12['plug'].where(tmy_12.db_temp > 20, 1)
+    plug_days = tmy_12.plug.sum()
+
+    plug_hrs = st.slider("how many hours do you plug in your block heater each day?", max_value = 24, value = 2)
+    plug_w = st.slider("how many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
+    kwh_block = plug_w/1000*plug_hrs*plug_days
+else:
+    kwh_block = 0
+cost_block = coe*kwh_block
+
 
 #now look at ghg emissions:
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
 ghg_ice = 8.887*tmy.gas.sum()
 
-
-
-
-
 ghg_ev = cpkwh*tmy.kwh.sum()
 
 ghg_block = cpkwh*kwh_block
-if garage:
-    ghg_block = 0
 
 st.write("")
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
