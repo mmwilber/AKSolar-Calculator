@@ -138,6 +138,7 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 
 #total cost to drive EV for a year:
 coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, value = .2)
+st.write("note: we do not account for PCE, block rates, or demand charges, so which could make the electric costs higher than expected from this simple calculator.")
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
