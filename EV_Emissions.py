@@ -185,6 +185,8 @@ ghg_block = cpkwh*kwh_block
 if garage:
     ghg_block = 0
 
+st.write("hours parked", tmy.parktime.sum())
+st.write("hours driving", tmy.drivetime.sum())
 st.write("")
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
 st.write("Total cost of ICE fuel = $", round(total_cost_gas+cost_block,2))
