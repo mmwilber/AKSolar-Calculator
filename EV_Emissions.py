@@ -161,29 +161,33 @@ dpg = st.slider('what is the price of gas?', value = 2.5, max_value = 10.0)
 tmy['mpg'] = mpg
 tmy['mpg'] = tmy['mpg'].where((tmy['db_temp'] > 77), mpg - .2*mpg*(77-tmy['db_temp'])/57)
 
-tmy['gas'] = tmy.miles/tmy.mpg
-total_cost_gas = tmy.gas.sum()*dpg
+tmy['gas'] = tmy.miles/tmy.mpg #gallons of gas used for driving a gas car
 
-#what about the engine block heater?
+
+#what about the engine block heater or idling in the cold?
+tmy_12 = tmy[['db_temp']].resample('D', label = 'right').min()
+tmy_12['plug'] = 0
+tmy_12['plug'] = tmy_12['plug'].where(tmy_12.db_temp > 20, 1)
+plug_days = tmy_12.plug.sum()
+
 plug = st.checkbox("I have a block heater on my gas car.")
+
 if plug:
     st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 50F")
-    tmy_12 = tmy[['db_temp']].resample('D', label = 'right').min()
-    tmy_12['plug'] = 0
-    tmy_12['plug'] = tmy_12['plug'].where(tmy_12.db_temp > 20, 1)
-    plug_days = tmy_12.plug.sum()
-
     plug_hrs = st.slider("how many hours do you plug in your block heater each day?", max_value = 24, value = 2)
     plug_w = st.slider("how many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
     kwh_block = plug_w/1000*plug_hrs*plug_days
 else:
     kwh_block = 0
 cost_block = coe*kwh_block
+idle = st.slider("how many minutes do you idle your gas car on cold days (to warm up or keep your car warm)?", max = 500, value = 5)
+idleg = .2*idle/60*plug_days #cars use about .2g/hr or more at idle : https://www.chicagotribune.com/autos/sc-auto-motormouth-0308-story.html
 
+total_cost_gas = (tmy.gas.sum()+idleg)*dpg
 
 #now look at ghg emissions:
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
-ghg_ice = 8.887*tmy.gas.sum()
+ghg_ice = 8.887*(tmy.gas.sum()+idleg)
 
 ghg_ev = cpkwh*tmy.kwh.sum()
 
