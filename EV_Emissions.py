@@ -42,7 +42,7 @@ def tmy_from_id(tmy_id):
     return df
 
 st.write("This is calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
-st.write("A comparison is also made to a internal combustion engine (ICE) vehicle.")
+st.write("A comparison is also made to an internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development.")
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of date")
 st.write("Base assumptions and data will be modified as research continues!")
@@ -114,8 +114,8 @@ tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0)
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
-epm = st.slider('enter the Rated kWh/mile of the EV to investigate, '
-                'this calculator internally adjusts for the effect of temperature. '
+epm = st.slider('enter the Rated kWh/mile of the EV to investigate '
+                '(this calculator internally adjusts for the effect of temperature): '
                 'A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
 
 
@@ -138,7 +138,7 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 
 #total cost to drive EV for a year:
 coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-st.write("note: we do not account for PCE, block rates, or demand charges, so which could make the electric costs higher than expected from this simple calculator.")
+st.write("note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
