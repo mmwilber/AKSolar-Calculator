@@ -41,7 +41,8 @@ def tmy_from_id(tmy_id):
     df = get_df(f'wx/tmy3/proc/{tmy_id}.pkl')
     return df
 
-st.write("This is calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
+st.title("Alaska Electric Vehicle Calculator")
+st.write("This is a calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to an internal combustion engine (ICE) vehicle.")
 st.write("This project is still in development.")
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of date")
