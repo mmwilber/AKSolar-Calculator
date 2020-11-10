@@ -205,6 +205,7 @@ ghg_block = cpkwh*kwh_block
 
 st.write("")
 st.write("The effective yearly average kWh/mile for your EV is calculated as ", round(tmy.kwh.sum()/tmy.miles.sum(),2))
+st.write("This is lower than the rated kWh/mile - cold temperatures lower the range and driving efficiency, and also lead to energy use to keep the battery warm while parked. ")
 st.write("")
 st.write("Total cost of EV fuel = $", round(total_cost_ev,2))
 st.write("Total cost of ICE fuel = $", round(total_cost_gas+cost_block,2))
