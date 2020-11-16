@@ -218,7 +218,7 @@ total_cost_gas = (tmy.gas.sum()+idleg)*dpg
 ghg_ice = 8.887*(tmy.gas.sum()+idleg)
 
 ghg_ev = cpkwh*(tmy.kwh.sum() - pvkwh)
-if ghg_ev < 0;
+if ghg_ev < 0:
     ghg_ev = 0
 
 ghg_block = cpkwh*kwh_block
