@@ -92,7 +92,7 @@ tmy['parktime'] =1- tmy['drivetime']
 garage = st.checkbox("I park in a garage overnight.")
 tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside temp
 if garage:
-    Temp_g = st.slider('what temperature is your garage kept at in the winter?', value = 50, max_value = 80)
+    Temp_g = st.slider('What temperature is your garage kept at in the winter?', value = 50, max_value = 80)
 
     # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp if garage temp < outside temp:
     tmy['t_park'] = tmy['t_park'].where(
@@ -131,7 +131,7 @@ tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during 
 
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
-epm = st.slider('enter the Rated kWh/mile of the EV to investigate '
+epm = st.slider('Enter the Rated kWh/mile of the EV to investigate '
                 '(this calculator internally adjusts for the effect of temperature): '
                 'A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
 
@@ -154,8 +154,8 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 #plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
 
 #total cost to drive EV for a year:
-coe = st.slider('what do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-st.write("note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
+coe = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
+st.write("Note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
@@ -171,7 +171,7 @@ cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
 pvkwh = 0 #initialize to no pv kwh...
 ispv = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
 if ispv:
-    pv = st.slider("How many kW of solar do you have installed? (pro tip: this calculator assumes a yearly capacity factor"
+    pv = st.slider("How many kW of solar will you have installed? (pro tip: this calculator assumes a yearly capacity factor "
                    "of 10%.  This is reasonable for most of Alaska, but if you are an engineering wiz and want to"
                    " correct this slider for the details of your installation, go ahead!)",
                    max_value = 25.0, value = 3.0)
@@ -183,7 +183,7 @@ if ispv:
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
-dpg = st.slider('what is the price of gas?', value = 2.5, max_value = 10.0)
+dpg = st.slider('What is the price of gas?', value = 2.5, max_value = 10.0)
 #make this temperature dependent too like above.
 #according to fueleconomy.gov, an ICE can have 15 to 25% lower mpg at 20F than 77F. the 25% is for trips under 3-4 miles, so could adjust the below later for this
 #for now I am just using 20% less
@@ -203,13 +203,13 @@ plug = st.checkbox("I have a block heater on my gas car.")
 
 if plug:
     st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 20F")
-    plug_hrs = st.slider("how many hours do you plug in your block heater each day?", max_value = 24, value = 2)
-    plug_w = st.slider("how many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
+    plug_hrs = st.slider("How many hours do you plug in your block heater each day?", max_value = 24, value = 2)
+    plug_w = st.slider("How many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
     kwh_block = plug_w/1000*plug_hrs*plug_days
 else:
     kwh_block = 0
 cost_block = coe*kwh_block
-idle = st.slider("how many minutes do you idle your gas car on cold days (to warm up or keep your car warm)?", max_value = 500, value = 5)
+idle = st.slider("How many minutes do you idle your gas car on cold days (to warm up or keep your car warm)?", max_value = 500, value = 5)
 idleg = .2*idle/60*plug_days #cars use about .2g/hr or more at idle : https://www.chicagotribune.com/autos/sc-auto-motormouth-0308-story.html
 
 total_cost_gas = (tmy.gas.sum()+idleg)*dpg
@@ -236,8 +236,8 @@ st.write(" ")
 st.write("Your personal driving habits and other real world conditions could change these results dramatically! ")
 st.write("Also, the underlying assumptions will be updated as we get better data. ")
 st.write("Thanks to Alan Mitchell of Analysis North for Alaskan utility data, tmy files, and wonderful code to access and use them all.")
-st.write("see http://ak-energy-data.analysisnorth.com and https://github.com/alanmitchell/heat-pump-calc")
-st.write("and definitely check out the Alaskan Heat Pump Calculator at https://heatpump.cf to see if you should get a heat pump!")
+st.write("See http://ak-energy-data.analysisnorth.com and https://github.com/alanmitchell/heat-pump-calc")
+st.write("...And definitely check out the Alaskan Heat Pump Calculator at https://heatpump.cf to see if you should get a heat pump!")
 st.write("")
 st.write("")
 st.write("Please peak under the hood at this code.  Basically, a typical year's hourly temperature profile is combined with a daily driving profile and realtionships between the energy use for driving and maintaining the EV while parked vs temperature to arrive at a cost and emissions for the kWh needed by the EV.")
