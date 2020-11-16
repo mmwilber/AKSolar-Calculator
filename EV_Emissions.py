@@ -173,7 +173,8 @@ ispv = st.checkbox("I will have solar panels at my home for the purpose of offse
 if ispv:
     pv = st.slider("How many kW of solar do you have installed? (pro tip: this calculator assumes a yearly capacity factor"
                    "of 10%.  This is reasonable for most of Alaska, but if you are an engineering wiz and want to"
-                   " correct this slider for the details of your installation, go ahead!)", max_value = 25, value = 3)
+                   " correct this slider for the details of your installation, go ahead!)",
+                   max_value = 25.0, value = 3.0)
     #at 10% capacity factor this equation below gives the number of PV kWh generated - we will be kind and
     #attribute them all to the EV, subtracting them off of the emissions
     pvkwh = .1*24*365*pv
