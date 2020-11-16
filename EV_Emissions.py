@@ -104,17 +104,24 @@ if garage:
 # parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
 #less than 0!
 #https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
-    #the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside at -4F, which might be a little to a lot less than
-    #below depending on how many kWh the range corresponds to (temperature adjusted or not??)
-    #I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.  The below gives me ~0.56kWh/hr
+#the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside
+#at -4F, which might be a little to a lot less than below depending on how many kWh the
+#range corresponds to (temperature adjusted or not??)
+#I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.
+# The Wattson relation above gives me ~0.56kWh/hr, the code actually used below give 0.266kWh/hr
 
+#T.S. reports 10 miles of range loss while parked for 2 hours, unplugged, at 28F (Tesla Y),
+#at .28 kwh/mile, this is 1.4kWh/hr!  This is far above the range of any linear fit tried.
+
+#Wattson relationship:
 #tmy['parke'] = tmy['t_park'] * -.0092 + .5206 #linear relationship of energy use with temperature
 
-#I have some messy data from 4 Alaskan Teslas as well, and adding to the Bolt data, here is
+#I have some messy data from 4 Alaskan Teslas as well, and adding to the Wattson data, here is
 #the trend I get - it gives the EV a bit more benefit of the doubt!
 #tmy['parke'] = tmy['t_park'] * -.005 + .341
-#the most generous relationship that this data seems to allow is:
-#I am also working to match real yearly avg kwh/mile for a Tesla in Fairbanks, and it does look
+#the most generous relationship that this data seems to allow is the code below:
+#I am also working to match real yearly avg kwh/mile for a Tesla in Fairbanks (results are
+# preliminary, and I will include them when the data is more complete), and it does look
 #like my cold weather impacts have been a bit harsher than reality, at least for energy while parked,
 #which is why I am trying to find a data-supported relationship that matches what I see in that data
 tmy['parke'] = tmy['t_park'] * -.004 + .25
@@ -161,7 +168,17 @@ cpkwh_default = float(cpkwh_default)
 cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
                   "but might be a couple of years out of date)?:", max_value = 2.0, value = cpkwh_default)
-
+pvkwh = 0 #initialize to no pv kwh...
+ispv = = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
+if ispv:
+    pv = st.slider("How many kW of solar do you have installed? (pro tip: this calculator assumes a yearly capacity factor"
+                   "of 10%.  This is reasonable for most of Alaska, but if you are an engineering wiz and want to"
+                   " correct this slider for the details of your installation, go ahead!)", max_value = 25, value = 3)
+    #at 10% capacity factor this equation below gives the number of PV kWh generated - we will be kind and
+    #attribute them all to the EV, subtracting them off of the emissions
+    pvkwh = .1*24*365*pv
+    st.write("The annual kWh that your solar panels are estimated to generate:", round(pvkwh,3))
+    st.write("We will use this to reduce the carbon emissions from your EV electricity.")
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
@@ -200,7 +217,9 @@ total_cost_gas = (tmy.gas.sum()+idleg)*dpg
 #Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
 ghg_ice = 8.887*(tmy.gas.sum()+idleg)
 
-ghg_ev = cpkwh*tmy.kwh.sum()
+ghg_ev = cpkwh*(tmy.kwh.sum() - pvkwh)
+if ghg_ev < 0;
+    ghg_ev = 0
 
 ghg_block = cpkwh*kwh_block
 
