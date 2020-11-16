@@ -169,7 +169,7 @@ cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
                   "but might be a couple of years out of date)?:", max_value = 2.0, value = cpkwh_default)
 pvkwh = 0 #initialize to no pv kwh...
-ispv = = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
+ispv = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
 if ispv:
     pv = st.slider("How many kW of solar do you have installed? (pro tip: this calculator assumes a yearly capacity factor"
                    "of 10%.  This is reasonable for most of Alaska, but if you are an engineering wiz and want to"
