@@ -44,9 +44,7 @@ def tmy_from_id(tmy_id):
 st.title("Alaska Electric Vehicle Calculator")
 st.write("This is a calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to an internal combustion engine (ICE) vehicle.")
-st.write("This project is still in development.")
-st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ and may be a bit out of date")
-st.write("Base assumptions and data will be modified as research continues!")
+st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ ")
 
 #location
 #get the Alaska city data
@@ -155,7 +153,7 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 
 #total cost to drive EV for a year:
 coe = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-st.write("Note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
+st.text("Note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
