@@ -231,6 +231,7 @@ st.write("Total cost of ICE fuel per year = $", round(total_cost_gas+cost_block,
 st.write("Total kg CO2 EV per year = ", round(ghg_ev,2))
 st.write("Total kg CO2 ICE per year = ", round(ghg_ice + ghg_block,2))
 st.write(" ")
+st.write("The calculations are based on data for commercially available electric cars, results may not hold for other types of electric vehicles. ")
 st.write("Your personal driving habits and other real world conditions could change these results dramatically! ")
 st.write("The underlying model relating energy use with temperature will be updated as we continue to collect cold weather EV data. ")
 st.write("Thanks to Alan Mitchell of Analysis North for Alaskan utility data, tmy files, and wonderful code to access and use them all.")
