@@ -42,6 +42,7 @@ def tmy_from_id(tmy_id):
     return df
 st.image(['ACEP.png','AEA Logo 3line Flush Left in Gradient Color.png'])
 st.title("Alaska Electric Vehicle Calculator")
+st.write()
 st.write("This is a calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
 st.write("A comparison is also made to an internal combustion engine (ICE) vehicle.")
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ ")
