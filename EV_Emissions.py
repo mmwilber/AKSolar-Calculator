@@ -105,8 +105,8 @@ if garage:
 #https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
 #the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside
 #at -4F, which might be a little to a lot less than below depending on how many kWh the
-#range corresponds to (temperature adjusted or not??)
-#I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use.
+#range corresponds to (temperature adjusted or not?? - since this is reported by the car, it is likely temperature adjusted)
+#I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use - probably the higher value.
 # The Wattson relation above gives me ~0.56kWh/hr, the code actually used below give 0.266kWh/hr
 
 #T.S. reports 10 miles of range loss while parked for 2 hours, unplugged, at 28F (Tesla Y),
