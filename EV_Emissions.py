@@ -168,8 +168,8 @@ cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
                   "but might be a couple of years out of date."
                   "  Another caveat - the default is based on total utility emissions, but additional electricity may come from a cleaner or dirtier source."
-                  "  For instance, in Fairbanks, any new electricity is likely to be generated from Naptha, which is cleaner than the utility average"
-                  "  which includes a lot of coal, so a better value to use below for Fairbanks might be 0.54)?:", max_value = 2.0, value = cpkwh_default)
+                  "  For instance, in Fairbanks, any new electricity is likely to be generated from Naptha, which is cleaner than the utility average,"
+                  "  so a better value to use below for Fairbanks might be 0.54)?:", max_value = 2.0, value = cpkwh_default)
 pvkwh = 0 #initialize to no pv kwh...
 ispv = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
 if ispv:
