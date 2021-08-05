@@ -128,6 +128,7 @@ tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0) #make sure this isn't less
 
 tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during the hour spent parked
 
+st.write("") #after being just fine, this was looking wrong - adding some spaces to try to keep text from overlapping
 #if driving:
 #2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
 epm = st.slider('Enter the Rated kWh/mile of the EV to investigate '
@@ -164,6 +165,7 @@ dfu = get_df('city-util/proc/utility.pkl')
 util = dfc['ElecUtilities'].loc[dfc['aris_city']==city].iloc[0][0][1] #find a utility id for the community chosen
 cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 cpkwh_default = float(cpkwh_default)
+st.write("")
 cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "(if you don't know, leave it at the default value here, which is specific to your community "
                   "but might be a couple of years out of date."
