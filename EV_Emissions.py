@@ -187,7 +187,7 @@ if ispv:
 
 #comparison to gas:
 mpg = st.slider('What is the mpg of your gas car?', value = 25, max_value = 60)
-dpg = st.slider('What is the price of gas?', value = 2.5, max_value = 10.0)
+dpg = st.slider('What is the price of gas?', value = 3.5, max_value = 10.0)
 #make this temperature dependent too like above.
 #according to fueleconomy.gov, an ICE can have 15 to 25% lower mpg at 20F than 77F. the 25% is for trips under 3-4 miles, so could adjust the below later for this
 #for now I am just using 20% less
