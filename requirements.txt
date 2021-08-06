@@ -1,4 +1,4 @@
 numpy
 pandas
 requests
-streamlit
+streamlit == 0.83.0
