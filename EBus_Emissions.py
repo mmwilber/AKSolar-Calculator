@@ -62,16 +62,37 @@ tmy = tmy_from_id(tmyid)
 
 
 # # put together a driving profile
+beg = st.date_input('Enter the first day of summer break?', datetime.date(2018,5,23))
+end = st.date_input('Enter the first day of the school year?', datetime.date(2018,8,23))
+
+#if end before beg, switch them.  Will have to force year to be 2018 if that is not chosen
+
 owcommute = (st.slider('How many total miles are driven each weekday during the school year', value = 10))/2
-weekend = (st.slider('How many miles are driven on a weekend day?', value = 0))/2
+weekend = (st.slider('How many miles are driven on a weekend day during the school year?', value = 0))/2
+summer_week = (st.slider('How many total miles are driven each weekday during the summer', value = 10))/2
+summer_weekend = (st.slider('How many miles are driven on a weekend day during the summer?', value = 0))/2
 tmy['miles'] = 0
 #Assume x miles at 8:30am and x miles at 3:30pm M-F
-## NEED TO EDIT THE BELOW TO BE SCHOOL YEAR ONLY!!  ALSO ASK FOR FIRST AND LAST DAY OF THE SCHOOL YEAR
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(8, 30))|(tmy.index.dayofweek > 4),owcommute)
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(15, 30))|(tmy.index.dayofweek > 4),owcommute)
-#that took care of times, but now for weekends, use the same times for simplicity:
-tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(8, 30)),weekend)
-tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(15, 30)),weekend)
+summer = tmy[beg:end]
+winter = pd.concat([tmy['2018-1-1':beg],tmy[end:'2018-12-31']])
+#Assume x miles at 8:30am and x miles at 3:30pm M-F during the school year
+## SCHOOL YEAR ONLY  
+winter['miles'] = winter['miles'].where((winter.index.time !=  datetime.time(8, 30))|(winter.index.dayofweek > 4),owcommute)
+winter['miles'] = winter['miles'].where((winter.index.time !=  datetime.time(15, 30))|(winter.index.dayofweek > 4),owcommute)
+
+#now for weekends, use the same times for simplicity:
+winter['miles'] = winter['miles'].where((winter.index.dayofweek < 5)|(winter.index.time !=  datetime.time(8, 30)),weekend)
+winter['miles'] = winter['miles'].where((winter.index.dayofweek < 5)|(winter.index.time !=  datetime.time(15, 30)),weekend)
+
+
+#now for summer:
+summer['miles'] = summer['miles'].where((summer.index.time !=  datetime.time(8, 30))|(summer.index.dayofweek > 4),summer_week)
+summer['miles'] = summer['miles'].where((summer.index.time !=  datetime.time(15, 30))|(summer.index.dayofweek > 4),summer_week)
+#now for summer weekends, use the same times for simplicity:
+summer['miles'] = summer['miles'].where((summer.index.dayofweek < 5)|(summer.index.time !=  datetime.time(8, 30)),summer_weekend)
+summer['miles'] = summer['miles'].where((summer.index.dayofweek < 5)|(summer.index.time !=  datetime.time(15, 30)),summer_weekend)
+
+tmy = pd.concat([winter,summer], sort = True)
 
 st.write("Total yearly miles driven:", tmy['miles'].sum())
 
@@ -127,11 +148,15 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 #plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
 
 #total cost to drive EV for a year:
-coe = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
+coe = st.slider('What is the per kWh cost for electricity?', max_value = 1.0, value = .14)
+demand = st.slider('What is the demand cost per kW?', max_value = 45.0, value = 22.0)
+st.write("For example, in Nov. 2021, AEL&P in Juneau had a per kWh commercial EV rate of $0.064 with no demand charge")
+st.write("CEA South in Anchorage had a large commercial rate of $0.1145/kWh with a demand charge of $21.98/kW")
+st.write("Note: some utilities might have seasonal or block rates, which we do not account for in this simple calculator.")
+st.write("We are also leaving out the meter/customer monthly charge.")
 
-st.write("Note: we do not account for PCE, block rates, or demand charges in this simple calculator.")
-#should really probably add in demand charges
-total_cost_ev = coe*tmy.kwh.sum()
+charger_power = st.slider('What is the power of your Charger?', max_value = 350.0, value = 7.0)
+total_cost_ev = coe*tmy.kwh.sum() + 12*demand*charger_power
 
 #greenhouse gas emissions from electricity:
 # Access Alan's Alaska utility data as a Pandas DataFrame
