@@ -250,4 +250,5 @@ st.write("...And definitely check out the Alaskan Heat Pump Calculator at https:
 st.write("")
 st.write("")
 st.write("Please peak under the hood at this code.  Basically, a typical year's hourly temperature profile is combined with a daily driving profile and realtionships between the energy use for driving and maintaining the EV while parked vs temperature to arrive at a cost and emissions for the kWh needed by the EV.")
+st.write("https://github.com/mmwilber/AK_EV_calculators/")
 st.write("email Michelle Wilber at mmwilber@alaska.edu with any suggestions or comments.")
