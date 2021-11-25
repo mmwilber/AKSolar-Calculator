@@ -112,20 +112,11 @@ tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during 
 
 st.write("") #some spaces to try to keep text from overlapping
 #if driving:
-#2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
-epm = st.slider('Enter the Rated kWh/mile of the EV to investigate '
-                '(this calculator internally adjusts for the effect of temperature): '
-                'A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
 
+#Based on data from winter 2020-2021 this is the best fit equation for energy use vs temperature for the Tok school bus:
+# energy per mile as a function of T: epm_t (kWh/mile) = -0.034 * Temp(C) + 2.092
 
-# if T < -9.4F, RL = .59 (probably not totally flat, but don't have data now)
-#if -9.4F < T < 73.4, RL = -.007 T(F) + .524
-#if 73.4 < T, RL = 0
-tmy['RL'] = .59
-tmy['RL'] = tmy['RL'].where((tmy['db_temp'] < -9.4), -.007*tmy['db_temp']+.524)
-tmy['RL'] = tmy['RL'].where((tmy['db_temp'] < 73.4), 0)
-
-epm_t = epm/(1-tmy['RL'])
+epm_t = -.034 *(5/9)*(tmy['db_temp'] - 32)+2.092
 #energy use: 
 tmy['kwh']= epm_t*tmy['miles']
 
@@ -137,7 +128,9 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 
 #total cost to drive EV for a year:
 coe = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-st.write("Note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
+
+st.write("Note: we do not account for PCE, block rates, or demand charges in this simple calculator.")
+#should really probably add in demand charges
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
@@ -155,7 +148,7 @@ cpkwh = st.slider("How many kg of CO2 are emitted per kWh for your utility "
                   "  For instance, in Fairbanks, any new electricity is likely to be generated from Naptha, which is cleaner than the utility average,"
                   "  so a better value to use below for Fairbanks might be 0.54)?:", max_value = 2.0, value = cpkwh_default)
 pvkwh = 0 #initialize to no pv kwh...
-ispv = st.checkbox("I will have solar panels at my home for the purpose of offsetting my EV emissions.")
+ispv = st.checkbox("I will have solar panels for the purpose of offsetting EV emissions.")
 if ispv:
     pv = st.slider("How many kW of solar will you have installed? (pro tip: this calculator assumes a yearly capacity factor "
                    "of 10%.  This is reasonable for most of Alaska, but if you are an engineering wiz and want to"
@@ -203,8 +196,8 @@ idleg = .2*idle/60*plug_days #cars use about .2g/hr or more at idle : https://ww
 total_cost_gas = (tmy.gas.sum()+idleg)*dpg
 
 #now look at ghg emissions:
-#Every gallon of gasoline burned creates about 8.887 kg of CO2 (EPA)
-ghg_ice = 8.887*(tmy.gas.sum()+idleg)
+#Every gallon of diesel burned creates about 10.180 kg of CO2 (EPA https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle)
+ghg_ice = 10.180*(tmy.gas.sum()+idleg)
 
 ghg_ev = cpkwh*(tmy.kwh.sum() - pvkwh)
 if ghg_ev < 0:
@@ -213,7 +206,7 @@ if ghg_ev < 0:
 ghg_block = cpkwh*kwh_block
 
 st.write("")
-st.write("The effective yearly average kWh/mile for your EV is calculated as ", round(tmy.kwh.sum()/tmy.miles.sum(),2))
+st.write("The effective yearly average kWh/mile for an electric Bus is calculated as ", round(tmy.kwh.sum()/tmy.miles.sum(),2))
 st.write("This is lower than the rated kWh/mile - cold temperatures lower the range and driving efficiency, and also lead to energy use to keep the battery warm while parked. ")
 st.write("")
 st.write("Total cost of EV fuel per year = $", round(total_cost_ev,2))
@@ -221,8 +214,8 @@ st.write("Total cost of ICE fuel per year = $", round(total_cost_gas+cost_block,
 st.write("Total kg CO2 EV per year = ", round(ghg_ev,2))
 st.write("Total kg CO2 ICE per year = ", round(ghg_ice + ghg_block,2))
 st.write(" ")
-st.write("The calculations are based on data for commercially available electric cars, results may not hold for other types of electric vehicles. ")
-st.write("Your personal driving habits and other real world conditions could change these results dramatically! ")
+st.write("The calculations are based on data for the Tok electric School bus from the first winter of driving, results are preliminary. ")
+st.write("Driving habits and other real world conditions could change these results dramatically! ")
 st.write("The underlying model relating energy use with temperature will be updated as we continue to collect cold weather EV data. ")
 st.write("Thanks to Alan Mitchell of Analysis North for Alaskan utility data, tmy files, and wonderful code to access and use them all.")
 st.write("See http://ak-energy-data.analysisnorth.com and https://github.com/alanmitchell/heat-pump-calc")
