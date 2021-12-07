@@ -150,7 +150,7 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 #total cost to drive EV for a year:
 coe = st.slider('What is the per kWh cost for electricity?', max_value = 1.0, value = .14)
 demand = st.slider('What is the demand cost per kW?', max_value = 45.0, value = 22.0)
-st.write("For example, in Nov. 2021, AEL&P in Juneau had a per kWh commercial EV rate of $0.064 with no demand charge")
+st.write("For example, in Nov. 2021, ")
 st.write("CEA South in Anchorage had a large commercial rate of $0.1145/kWh with a demand charge of $21.98/kW")
 st.write("Note: some utilities might have seasonal or block rates, which we do not account for in this simple calculator.")
 st.write("We are also leaving out the meter/customer monthly charge.")
