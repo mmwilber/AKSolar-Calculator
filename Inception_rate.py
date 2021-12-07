@@ -35,9 +35,9 @@ st.write("This is a calculator to calculate the effective per kWh rate when the 
 #tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0] #find the corresponding TMYid - OLD edit this to get rate info maybe
 
 
-dc = (st.slider('Enter the demand charge, in $/kW', max_value = 44.53, value = 20.0)
-ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .60, value = .12)
-lf = (st.slider('Enter the assumed load factor, in %, max_value = 100, value = 10)
+dc = (st.slider('Enter the demand charge, in $/kW', max_value = 44.53, value = 20.0))
+ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .60, value = .12))
+lf = (st.slider('Enter the assumed load factor, in %, max_value = 100, value = 10))
 
 # calculate the inception rate
 
