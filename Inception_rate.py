@@ -36,8 +36,8 @@ st.write("This is a calculator to calculate the effective per kWh rate when the 
 
 
 dc = (st.slider('Enter the demand charge, in $/kW', max_value = 44.53, value = 20.0))
-ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .6000, value = .1200))
-lf = (st.slider('Enter the assumed load factor, in %', max_value = 100.0, value = 10.0))
+ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .6000, step = .0001, value = .1200))
+lf = (st.slider('Enter the assumed load factor, in %', max_value = 100.0, step = .1, value = 10.0))
 
 # calculate the inception rate
 
