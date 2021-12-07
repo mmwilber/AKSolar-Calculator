@@ -46,7 +46,7 @@ rate = dc/(lf/100 * 730) + ec
 st.write("Note: some utilities might have seasonal rates, which may neccessitate performing more than one calculation")
 
 st.write("")
-st.write("The inception per kWh rate is calculated as ", round(rate,4))
+st.write("The inception rate per kWh is calculated as ", round(rate,5))
 
 st.write("")
 st.write("Please peak under the hood at this code, which can be found at")
