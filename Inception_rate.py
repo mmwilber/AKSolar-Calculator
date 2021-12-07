@@ -17,7 +17,7 @@ st.write("")
 st.write("In October 2021, the Regulatory Commission or Alaska issued U-21-022(2), \
 an order granting, in part, a petition for approval of a 2-part rate \
 for electric vehicle charging stations where the new rate is determined by the formula: ")
-st.write("[Demand Charge/(Assumed LF x 730)] + Energy Charge," 
+st.write("[Demand Charge/(Assumed LF x 730)] + Energy Charge,") 
 st.write("where each utility would use the \
 current demand and energy charges approved in its last general rate case and propose and \
 support an assumed load factor as part of its tariff filing proposing a DCFC inception rate for RCA approval.")
