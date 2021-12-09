@@ -27,7 +27,7 @@ st.write("This is a calculator to calculate the effective per kWh rate when the 
 #upload a list of utilities to choose from:
 #upload the csv of rates
 # 
-df = read_csv('utility_rates_12_8_21.csv')
+df = pd.read_csv('utility_rates_12_8_21.csv')
 
 #now create a drop down menu of the available utilities 
 utilities = df['Utility'] #get a list of names
