@@ -24,22 +24,31 @@ support an assumed load factor as part of its tariff filing proposing a DCFC inc
 
 st.write("This is a calculator to calculate the effective per kWh rate when the other factors are input.")
 
-#Future update: upload a list of utilities to choose from:
-#get the data
-# Access as a Pandas DataFrame
-#df = read_csv('rates.csv')
+#upload a list of utilities to choose from:
+#upload the csv of rates
+# 
+df = read_csv('utility_rates_12_8_21.csv')
 
 #now create a drop down menu of the available utilities 
-#utilities = df['utility'].drop_duplicates().sort_values(ignore_index = True) #get a list of names
-#utility = st.selectbox('Select a utility:', utilities ) #make a drop down list and get choice
-#tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0] #find the corresponding TMYid - OLD edit this to get rate info maybe
+utilities = df['Utility'] #get a list of names
+utility = st.selectbox('Select a utility:', utilities ) #make a drop down list and get choice
+
+st.write("Rates in our database are valid on 12/8/21")
+custom = st.checkbox("Check here if your utility wasn't listed or you would like to use custom or updated rate")
 
 st.write("")
-st.write("Note: you may use your computer's arrow keys with the mouse to do fine adjustments to the slider values below:")
+if custom:
+  
+  st.write("Note: you may use your computer's arrow keys with the mouse to do fine adjustments to the slider values below:")
 
-st.write("")
-dc = (st.slider('Enter the demand charge, in $/kW', max_value = 44.53, value = 20.0))
-ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .6000, step = .0001, format = "%1.4f",value = .1200))
+  st.write("")
+  dc = (st.slider('Enter the demand charge, in $/kW', max_value = 44.53, value = 20.0))
+  ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .6000, step = .0001, format = "%1.4f",value = .1200))
+  
+else:
+  dc = = df['LCD'].loc[df['Utility']==utility].iloc[0] #find the corresponding demand rate
+  ec = = df['LCE'].loc[df['Utility']==utility].iloc[0] #find the corresponding energy rate
+  
 lf = (st.slider('Enter the assumed load factor, in %', max_value = 100.0, step = .1, format = "%1.1f",value = 10.0))
 
 # calculate the inception rate
