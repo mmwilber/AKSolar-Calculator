@@ -1,0 +1,10 @@
+Utility,RE,SCE,LCE,LCD,website,Notes
+CEA North,0.172874,0.138914,0.025114,44.53,https://www.chugachelectric.com/member-services/billing-payments/rate-information-north-district,CEA also has a large general primary service rate
+CEA South,0.201864,0.163484,0.114534,21.98,https://www.chugachelectric.com/member-services/billing-payments/rate-information-south-district,CEA also has a large general primary service rate
+MEA,0.19676,0.19676,0.15761,7.7,https://www.mea.coop/co-op-benefits/current-rates,"MEA has block rates for single phase service (Residential and small commercial) - the per kWh rate is $0.01255 lower for usage over 1,300kWh in a monthly billing period.  That is not taken into account here."
+GVEA,0.23147,0.23889,0.14916,22.27,https://gvea.com/rates/,GVEA also has a GS-3 rate not listed here with higher demand and lower energy charge.
+HEA,0.23803,0.2446,0.18241,21.63,https://www.homerelectric.com/member-services/my-bill/rates/,"HEA also has a system delivery charge for residential and small commercial (approx. $25) if less than 150kWh are used in a billing period, a minimum demand for large commercial, and a seperate Industrial rate class,  "
+AELP Peak,0.117318,0.113718,0.060818,13.85,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,"AELP also has a residential and small commercial with demand rate, not investigated here."
+AELP Off-Peak,0.096718,0.090818,0.057118,8.82,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,"AELP also has a residential and small commercial with demand rate, not investigated here."
+AELP EV rate Peak,0.057718,0.066018,0.060818,13.85,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,Large Commercial rate is not a special EV rate
+AELP EV rate Off-Peak,0.050718,0.058718,0.057118,8.82,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,Large Commercial rate is not a special EV rate
