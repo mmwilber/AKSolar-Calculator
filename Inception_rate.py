@@ -46,8 +46,8 @@ if custom:
   ec = (st.slider('Enter the energy charge, in $/kWh', max_value = .6000, step = .0001, format = "%1.4f",value = .1200))
   
 else:
-  dc = = df['LCD'].loc[df['Utility']==utility].iloc[0] #find the corresponding demand rate
-  ec = = df['LCE'].loc[df['Utility']==utility].iloc[0] #find the corresponding energy rate
+  dc = df['LCD'].loc[df['Utility']==utility].iloc[0] #find the corresponding demand rate
+  ec = df['LCE'].loc[df['Utility']==utility].iloc[0] #find the corresponding energy rate
   
 lf = (st.slider('Enter the assumed load factor, in %', max_value = 100.0, step = .1, format = "%1.1f",value = 10.0))
 
