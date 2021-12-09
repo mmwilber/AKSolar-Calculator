@@ -59,6 +59,13 @@ st.write("The inception rate per kWh is calculated as ", round(rate,5))
 st.write("")
 st.write("Note: some utilities might have seasonal rates, which may neccessitate performing more than one calculation")
 
+df['IR'] = df['LCD']/(lf/100 * 730) + df['LCE']
+tab = df['Utility']
+tab['Inception Rate'] = df.IR
+tab['Small Commercial Rate'] = df.SCE
+st.table(tab)
+
+
 st.write("")
 st.write("Please peak under the hood at this code, which can be found at")
 st.write("https://github.com/mmwilber/AK_EV_calculators/")
