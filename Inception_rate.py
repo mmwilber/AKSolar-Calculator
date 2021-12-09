@@ -60,9 +60,10 @@ st.write("")
 st.write("Note: some utilities might have seasonal rates, which may neccessitate performing more than one calculation")
 
 df['IR'] = df['LCD']/(lf/100 * 730) + df['LCE']
-tab = df['Utility'].set_index('Utility')
+tab = df['Utility']
 tab['Inception Rate'] = df.IR
 tab['Small Commercial Rate'] = df.SCE
+tab = tab.set_index('Utility')
 st.table(tab)
 
 
