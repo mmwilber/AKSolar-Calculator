@@ -148,10 +148,10 @@ tmy['kwh'] = tmy.kwh + tmy.parke
 #plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
 
 #total cost to drive EV for a year:
-coe = st.slider('What is the per kWh cost for electricity?', max_value = 1.0, value = .14)
+coe = st.slider('What is the per kWh cost for electricity?', max_value = 1.0, value = .11)
 demand = st.slider('What is the demand cost per kW?', max_value = 45.0, value = 22.0)
 st.write("For example, in Nov. 2021, ")
-st.write("CEA South in Anchorage had a large commercial rate of $0.1145/kWh with a demand charge of $21.98/kW")
+st.write("CEA South in Anchorage had a large commercial rate of $0.1089/kWh with a demand charge of $21.98/kW")
 st.write("Note: some utilities might have seasonal or block rates, which we do not account for in this simple calculator.")
 st.write("We are also leaving out the meter/customer monthly charge.")
 
@@ -203,20 +203,20 @@ tmy_12['plug'] = 0
 tmy_12['plug'] = tmy_12['plug'].where(tmy_12.db_temp > 20, 1)
 plug_days = tmy_12.plug.sum()
 
-#plug = st.checkbox("I have a block heater on my gas car.")  #can add this back if find out buses ever have block heaters, etc!
+plug = st.checkbox("There are block heaters on diesel buses.")  #yes, buses have block heaters!
 
-#if plug:
-#    st.write("This calculator assumes a block heater is used for your gas car any day the minimum temperature has been less than 20F")
-#    plug_hrs = st.slider("How many hours do you plug in your block heater each day?", max_value = 24, value = 2)
-#    plug_w = st.slider("How many watts is your block heater (or block plus oil heater)?", min_value = 400, max_value = 1600)
-#    kwh_block = plug_w/1000*plug_hrs*plug_days
-#else:
-#    kwh_block = 0
-kwh_block = 0 # delete this line if add back the above
+if plug:
+    st.write("This calculator assumes a block heater is used any day the minimum temperature has been less than 20F")
+    plug_hrs = st.slider("How many hours do you plug in your block heater each day?", max_value = 24, value = 2)
+    plug_w = st.slider("How many watts is your block heater?", min_value = 600, max_value = 2000)
+    kwh_block = plug_w/1000*plug_hrs*plug_days
+else:
+    kwh_block = 0
+
 cost_block = coe*kwh_block
 idle = st.slider("How many minutes do you idle the diesel bus on cold days (to warm up or keep warm)?", max_value = 500, value = 5)
-idleg = .2*idle/60*plug_days #cars use about .2g/hr or more at idle : https://www.chicagotribune.com/autos/sc-auto-motormouth-0308-story.html
-#change above as needed for buses!
+idleg = .5*idle/60*plug_days #Typical bus uses .5gal/hr at idle : https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiplMv55J31AhVLVs0KHamZDPkQFnoECAMQAw&url=https%3A%2F%2Fwww.epa.gov%2Fsites%2Fproduction%2Ffiles%2F2015-04%2Fdocuments%2Fdieselexhaustschoolbusidling.pdf&usg=AOvVaw3uczh_GjwlrhGv14v4gcOB
+#also need info on deisel fuel use for ProHeats - ASD uses both block heaters and Proheats starting at 4:30am on cold mornings.
 
 total_cost_gas = (tmy.gas.sum()+idleg)*dpg
 
