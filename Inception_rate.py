@@ -27,7 +27,7 @@ st.write("This is a calculator to calculate the effective per kWh inception rate
 #upload a list of utilities to choose from:
 #upload the csv of rates
 # 
-df = pd.read_csv('utility_rates_12_8_21.csv')
+#df = pd.read_csv('utility_rates_12_8_21.csv')
 st.write("Rates in our database are valid on 12/8/21")
 one = st.checkbox("Check here if you want to look at a specific utility's inception rate, otherwise all the utilities on file will be compared.")
 if one:
