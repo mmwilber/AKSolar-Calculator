@@ -6,5 +6,3 @@ GVEA,0.23147,0.23889,0.14916,22.27,https://gvea.com/rates/,GVEA also has a GS-3 
 HEA,0.23803,0.2446,0.18241,21.63,https://www.homerelectric.com/member-services/my-bill/rates/,"HEA also has a system delivery charge for residential and small commercial (approx. $25) if less than 150kWh are used in a billing period, a minimum demand for large commercial, and a seperate Industrial rate class,  "
 AELP Peak,0.117318,0.113718,0.060818,13.85,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,"AELP also has a residential and small commercial with demand rate, not investigated here."
 AELP Off-Peak,0.096718,0.090818,0.057118,8.82,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,"AELP also has a residential and small commercial with demand rate, not investigated here."
-AELP EV rate Peak,0.057718,0.066018,0.060818,13.85,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,Large Commercial rate is not a special EV rate
-AELP EV rate Off-Peak,0.050718,0.058718,0.057118,8.82,https://www.aelp.com/Customer-Service/Rates-Billing/Current-Rates,Large Commercial rate is not a special EV rate
