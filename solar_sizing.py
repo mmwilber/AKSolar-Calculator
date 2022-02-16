@@ -1,6 +1,4 @@
-#ability to choose how long you use block heater, size of block heater, how long idle for ICE
-#weekend miles
-#assume 30mph (or ask?) and subtract off travel time from parked time.
+
 import os
 import io
 import math
@@ -40,10 +38,10 @@ def tmy_from_id(tmy_id):
     """
     df = get_df(f'wx/tmy3/proc/{tmy_id}.pkl')
     return df
-st.image(['ACEP.png','AEA Logo 3line Flush Left in Gradient Color.png'])
-st.title("Alaska Electric Vehicle Calculator")
+st.image(['ACEP.png'])
+st.title("Alaska Solar PV Sizing and Payback Calculator")
 st.write("")
-st.write("This is a calculator to find out how much it would cost to charge an EV at home in Alaska, and what the carbon emissions would be.")
+st.write("This is a calculator to find optimal sizing and economic payback for a behind-the-meter PV system in Alaska.")
 st.write("A comparison is also made to an internal combustion engine (ICE) vehicle.")
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ ")
 
@@ -62,7 +60,7 @@ tmy = tmy_from_id(tmyid)
 #note: the temperatures are in F :)
 
 
-# # put together a driving profile
+# User Input
 owcommute = (st.slider('How many miles do you drive each weekday, on average?', value = 10))/2
 weekend = (st.slider('How many miles do you drive each weekend day, on average?', value = 10))/2
 tmy['miles'] = 0
