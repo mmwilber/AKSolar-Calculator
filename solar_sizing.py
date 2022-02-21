@@ -66,8 +66,8 @@ st.write("Note: the first 4 choices correspond to roof slopes of 3 in 12, 4 in 1
 st.write("")
 taxr = st.selectbox('Select a solar tax credit amount, 26% for installation in 2022, 22% for 2023:', [26,22] )/100 #make a drop down list and get choice.26 #26 in 2022, 22% in 2023
 
-life = st.slider('What is the life of your system?', max_value = 30, value = 20)
-cost = st.slider('What is the cost of your system per installed watt (this may depend on the size of the system)?', max_value = 9, value = 3)
+life = st.slider('What is the life of your system in years?', max_value = 30, value = 20)
+cost = st.slider('What is the cost of your system in $ per installed watt (this may depend on the size of the system)?', max_value = 9, value = 3)
 def_size = 3 #will need this later if not a net metered system
 
 
