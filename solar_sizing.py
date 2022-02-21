@@ -167,4 +167,5 @@ st.write("...And definitely check out the Alaskan Heat Pump Calculator at https:
 st.write("")
 st.write("")
 st.write("Please peak under the hood at this code at https://github.com/mmwilber/AKSolar-Calculator")
+st.write("Solar production is modeled via PVWatts assuming standard modules in a fixed open rack facing due south at the chosen tilt and using a nearby TMY3 station.  Losses are set to 14%, and other parameters are PVWatts defaults.")
 st.write("email Michelle Wilber at mmwilber@alaska.edu with any suggestions or comments.")
