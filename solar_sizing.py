@@ -92,7 +92,7 @@ rate_def = float(rate_def) #the slider later didn't like the numpy.float64
 cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 cpkwh_default = float(cpkwh_default) 
 st.write("")
-st.write("According to the database, your utility is ", uname)
+#st.write("According to the database, your utility is ", uname) #if I keep this in will have to deal with the fact that ANC is listed as ML&P!
 st.write("Always talk to your utility before adding grid-connected solar!  Each utility has its own process, and some may not be equiped to safely allow electricity to flow back on to the grid.")
 st.write("Golden Valley Electric, Matanuska Electric, Chugach Electric, Seward Electric and Homer Electric allow net metering, with certain limits and an interconnection agreement")
 
