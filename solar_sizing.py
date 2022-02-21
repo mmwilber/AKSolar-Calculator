@@ -126,7 +126,7 @@ prod = size*unit_prod
 
 
 #more calcs - will want to present:
-cost_sys = cost * size
+cost_sys = cost * size*1000
 st.write("Expected System Cost: $", cost_sys)
 tcredit = cost_sys * taxr
 st.write("Expected Tax Credit: $", tcredit)
