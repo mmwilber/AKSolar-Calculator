@@ -134,13 +134,13 @@ tcredit = cost_sys * taxr
 st.write("Expected Tax Credit: $", round(tcredit,2))
 net_cost = cost_sys - tcredit
 st.write("Expected Net System Cost: $", round(net_cost,2))
-st.write("Expected System Production in kWh:", round(sum(prod),1))
+st.write("Expected System Production in kWh:", round(sum(prod),0))
 if nm:
     save = rate*prod #only true if net metering and for this prod l.t. consumpt
     #for net metered - where prod < usage, save = rate*prod, where prod > usage, save = usage*rate + copa*(prod - usage)
     save.where(prod < usage, usage*rate + copa*(prod-usage), inplace = True)
     annual_save = sum(save)
-    st.write("Expected Annual Energy Cost Savings:", round(annual_save,2))
+    st.write("Expected Annual Energy Cost Savings:$", round(annual_save,2))
     simplepay = net_cost/annual_save
     st.write("Simple Payback in Years:", round(simplepay,1))
     annualROI = ((1+((life*annual_save)-net_cost)/net_cost)**(1/life)-1)*100
