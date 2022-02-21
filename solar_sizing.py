@@ -160,7 +160,7 @@ if nm:
 
 
 st.write("")
-
+st.write("This calculator was written in excel by Ben Loeffler and adapted to streamlit by Michelle Wilber.  Any errors are the fault of the adaptation")
 st.write("Thanks to Alan Mitchell of Analysis North for Alaskan utility data, tmy files, and wonderful code to access and use them all.")
 st.write("See http://ak-energy-data.analysisnorth.com and https://github.com/alanmitchell/heat-pump-calc")
 st.write("...And definitely check out the Alaskan Heat Pump Calculator at https://heatpump.cf to see if you should get a heat pump!")
