@@ -45,6 +45,7 @@ st.write("")
 st.write("This is a calculator to find optimal sizing and economic payback for a behind-the-meter PV system in Alaska.")
 
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ ")
+st.write("Solar modeling is done using https://pvwatts.nrel.gov/ ")
 
 #location
 #get the Alaska city data
@@ -102,7 +103,7 @@ if nm:
     #choose an electric rate, avoided fuel cost,netmetered?, system life, system cost,  monthly usage
     rate = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = rate_def)
     st.write("Note: we do not account for PCE limits, block rates, or demand charges, which could change the results.")
-    copa = st.slider('What is the avoided fuel cost for your utility?', max_value = .20, value = .7)
+    copa = st.slider('What is the avoided fuel cost for your utility?', max_value = .20, value = .08)
     st.write("To find this, check at your utility's website or call the utility customer service. This is the amount assumed to be payed for electricity sold back to your utility.")
     st.write("Input your monthly electric usage in kWh (from your bills or utility member portal) here:")
     u1 = number_input('January:')
