@@ -69,7 +69,7 @@ taxr = st.selectbox('Select a solar tax credit amount, 26% for installation in 2
 
 life = st.slider('What is the life of your system in years?', max_value = 30, value = 20)
 cost = st.slider('What is the cost of your system in $ per installed watt (this may depend on the size of the system)?', max_value = 9, value = 3)
-def_size = 3 #will need this later if not a net metered system
+def_size = 3.0 #will need this later if not a net metered system
 
 
 #find the production at that tilt and location:
@@ -129,24 +129,24 @@ prod = size*unit_prod
 
 #more calcs - will want to present:
 cost_sys = cost * size*1000
-st.write("Expected System Cost: $", cost_sys)
+st.write("Expected System Cost: $", round(cost_sys,2))
 tcredit = cost_sys * taxr
-st.write("Expected Tax Credit: $", tcredit)
+st.write("Expected Tax Credit: $", round(tcredit,2))
 net_cost = cost_sys - tcredit
-st.write("Expected Net System Cost: $", net_cost)
+st.write("Expected Net System Cost: $", round(net_cost,2))
 st.write("Expected System Production in kWh:", round(sum(prod),1))
 if nm:
     save = rate*prod #only true if net metering and for this prod l.t. consumpt
     #for net metered - where prod < usage, save = rate*prod, where prod > usage, save = usage*rate + copa*(prod - usage)
     save.where(prod < usage, usage*rate + copa*(prod-usage), inplace = True)
     annual_save = sum(save)
-    st.write("Expected Annual Energy Cost Savings:", annual_save)
+    st.write("Expected Annual Energy Cost Savings:", round(annual_save,2))
     simplepay = net_cost/annual_save
-    st.write("Simple Payback:", simplepay)
-    anualROI = (1+((life*annual_save)-net_cost)/net_cost)**(1/life)-1
-    st.write("Annualizaed ROI:", annualROI)
+    st.write("Simple Payback in Years:", round(simplepay,1))
+    annualROI = ((1+((life*annual_save)-net_cost)/net_cost)**(1/life)-1)*100
+    st.write("Annualizaed ROI:", round(annualROI,1),"%")
     grid_red = sum(prod)/sum(usage)*100
-    st.write("Percent reduction in Grid Energy Usage:", grid_red)
+    st.write("Reduction in Grid Energy Usage:", round(grid_red,1),"%")
 
 
 
