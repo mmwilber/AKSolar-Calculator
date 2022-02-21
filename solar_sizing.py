@@ -31,13 +31,14 @@ def get_df(file_path):
     df = pd.read_pickle(io.BytesIO(b), compression='bz2')
     return df
 
-@functools.lru_cache(maxsize=50)    # caches the TMY dataframes cuz retrieved remotely
-def tmy_from_id(tmy_id):
-    """Returns a DataFrame of TMY data for the climate site identified
-    by 'tmy_id'.
-    """
-    df = get_df(f'wx/tmy3/proc/{tmy_id}.pkl')
-    return df
+#load a file with tmy summary info including the best tilt for a solar panel:
+df = pd.read_csv('/drive/My Drive/Electric Vehicles/EV Solar/AKtmy_summary.csv', parse_dates = True, index_col = 'tmy_id')
+
+#load a file with pvwatts monthly solar production for tmy3 stations in AK, based on tilt:
+results_df = pd.read_csv('/drive/My Drive/Electric Vehicles/EV Solar/AKtmy_monthlyprod.csv', parse_dates = True, index_col = 0)
+#these are the tilts used:
+#tilts = [14,18.4,22.6,26.6,30,45,df['best_tilt'].loc[df.index == tmyid].iloc[0],90] 
+
 st.image(['ACEP.png'])
 st.title("Alaska Solar PV Sizing and Payback Calculator")
 st.write("")
@@ -56,104 +57,68 @@ city = st.selectbox('Select your community:', cities ) #make a drop down list an
 tmyid = dfc['TMYid'].loc[dfc['aris_city']==city].iloc[0] #find the corresponding TMYid
 
 #get the tmy for the community chosen:
-tmy = tmy_from_id(tmyid)
+#tmy = tmy_from_id(tmyid)
 #note: the temperatures are in F :)
 
 
 # User Input
-owcommute = (st.slider('How many miles do you drive each weekday, on average?', value = 10))/2
+
+
+#choose a tilt
+#choose an electric rate, avoided fuel cost,netmetered?, system life, system cost,  monthly usage 
+tilt = 45
+rate = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
+st.write("Note: we do not account for PCE, block rates, or demand charges, which could change the results.")
+copa = st.slider('What is the avoided fuel cost for your utility?', max_value = .50, value = .7)
+st.write("This is the amount assumed to be payed for electricity sold back to your utility.")
+taxr = .26 #26 in 2022, 22% in 2023
+life = 20
+cost = 3.00
+usage = pd.Series([600,600,500,400,400,300,300,400,500,500,600,600])
+
+#find the production at that tile and location:
+unit_prod = results_df.loc[(results_df['tmy_id'] == tmyid) & (results_df['tilt'] == tilt)].iloc[0,2:]
+unit_prod.index = unit_prod.index.astype(int)-1
+#some calulations:
+max_size = usage/unit_prod #element-wise array calc
+def_size = min(max_size)
+size = def_size #the default
+size = 5
+prod = size*unit_prod 
+
+save = rate*prod #only true if net metering and for this prod l.t. consumpt
+#for net metered - where prod < usage, save = rate*prod, where prod > usage, save = usage*rate + copa*(prod - usage)
+save.where(prod < usage, usage*rate + copa*(prod-usage), inplace = True)
+#more calcs - will want to present as a table:
+cost_sys = cost * size
+tcredit = cost_sys * taxr
+net_cost = cost_sys - tcredit
+annual_save = sum(save)
+simplepay = net_cost/annual_save
+anualROI = (1+((life*annual_save)-net_cost)/net_cost)**(1/life)-1
+grid_red = sum(prod)/sum(usage)
+
+
 weekend = (st.slider('How many miles do you drive each weekend day, on average?', value = 10))/2
-tmy['miles'] = 0
-#Assume a 'normal' commute of x miles at 8:30am and 5 miles at 5:30pm M-F
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(8, 30))|(tmy.index.dayofweek > 4),owcommute)
-tmy['miles'] = tmy['miles'].where((tmy.index.time !=  datetime.time(17, 30))|(tmy.index.dayofweek > 4),owcommute)
-#that took care of times, but now for weekends, use the same times for simplicity:
-tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(8, 30)),weekend)
-tmy['miles'] = tmy['miles'].where((tmy.index.dayofweek < 5)|(tmy.index.time !=  datetime.time(17, 30)),weekend)
 
 st.write("Total yearly miles driven:", tmy['miles'].sum())
 
-# assume an average speed to calculate how much of the hour is spent driving vs parked
-speed = 30
-tmy['drivetime'] = tmy['miles'] / speed  # make a new column for time spent driving in fraction of an hour
-
-# if time is greater than an hour, we need to also mark sequential hours with correct amount
-
-for i, t in enumerate(tmy['drivetime']):
-    if t > 1:
-        tmy.drivetime.iloc[i + 1] = tmy.drivetime.iloc[i + 1] + tmy.drivetime.iloc[i] - 1
-        tmy.drivetime.iloc[i] = 1
-tmy['parktime'] =1- tmy['drivetime']
-
 #add a garage option for overnight parking
 garage = st.checkbox("I park in a garage overnight.")
-tmy['t_park'] = tmy['db_temp']  # set the default parking temp to the outside temp
 if garage:
     Temp_g = st.slider('What temperature is your garage kept at in the winter?', value = 50, max_value = 80)
 
-    # where the time is at or after 8:30 and before or at 17:30, parking temp is default, otherwise it is garage temp if garage temp < outside temp:
-    tmy['t_park'] = tmy['t_park'].where(
-        ((tmy.index.time >= datetime.time(8, 30)) & (tmy.index.time <= datetime.time(17, 30)))|(tmy.t_park > Temp_g), Temp_g)
 
-# # Use the relationship between temperature and energy use to find the total energy use
-
-#from CEA's Wattson:  to condition battery while parked: 
-# parke (kWh/hr) = -.0092 * Temp(F) + .5206 (down to 2.5F at least), and not 
-#less than 0!
-#https://www.greencarreports.com/news/1115039_chevy-bolt-ev-electric-car-range-and-performance-in-winter-one-owners-log
-#the resource above says that a Bolt used 24 miles of range when parked for 30 hours outside
-#at -4F, which might be a little to a lot less than below depending on how many kWh the
-#range corresponds to (temperature adjusted or not?? - since this is reported by the car, it is likely temperature adjusted)
-#I calculate this might be anywhere from 0.2 to 0.5 kWh/hr energy use - probably the higher value.
-# The Wattson relation above gives me ~0.56kWh/hr, the code actually used below give 0.266kWh/hr
-
-#T.S. reports 10 miles of range loss while parked for 2 hours, unplugged, at 28F (Tesla Y),
-#at .28 kwh/mile, this is 1.4kWh/hr!  This is far above the range of any linear fit tried.
-
-#Wattson relationship:
-#tmy['parke'] = tmy['t_park'] * -.0092 + .5206 #linear relationship of energy use with temperature
-
-#I have some messy data from 4 Alaskan Teslas as well, and adding to the Wattson data, here is
-#the trend I get - it gives the EV a bit more benefit of the doubt!
-#tmy['parke'] = tmy['t_park'] * -.005 + .341
-#the most generous relationship that this data seems to allow is the code below:
-#I am also working to match real yearly avg kwh/mile for a Tesla in Fairbanks (results are
-# preliminary, and I will include them when the data is more complete), and it does look
-#like my cold weather impacts have been a bit harsher than reality, at least for energy while parked,
-#which is why I am trying to find a data-supported relationship that matches what I see in that data
-tmy['parke'] = tmy['t_park'] * -.004 + .25
-tmy['parke'] = tmy['parke'].where(tmy['parke'] > 0,0) #make sure this isn't less than zero!
-
-tmy['parke'] = tmy['parke']*tmy['parktime'] #adjusted for amount of time during the hour spent parked
 
 st.write("") #after being just fine, this was looking wrong - adding some spaces to try to keep text from overlapping
-#if driving:
-#2017 Chevy Bolt is energy per mile (epm) = 28kWh/100mi at 100% range (fueleconomy.gov)
+
 epm = st.slider('Enter the Rated kWh/mile of the EV to investigate '
                 '(this calculator internally adjusts for the effect of temperature): '
                 'A 2017 Bolt is .28 according to fueleconomy.gov', value = .28, max_value = 3.0)
 
 
-# if T < -9.4F, RL = .59 (probably not totally flat, but don't have data now)
-#if -9.4F < T < 73.4, RL = -.007 T(F) + .524
-#if 73.4 < T, RL = 0
-tmy['RL'] = .59
-tmy['RL'] = tmy['RL'].where((tmy['db_temp'] < -9.4), -.007*tmy['db_temp']+.524)
-tmy['RL'] = tmy['RL'].where((tmy['db_temp'] < 73.4), 0)
-
-epm_t = epm/(1-tmy['RL'])
-#energy use: 
-tmy['kwh']= epm_t*tmy['miles']
-
-#add on the energy use while parked:
-tmy['kwh'] = tmy.kwh + tmy.parke
-
-#toplot=tmy['2018-5-23':'2018-5-30']
-#plt.plot(toplot.index, toplot.kwh) - maybe edit to plot something with streamlit!?
-
 #total cost to drive EV for a year:
-coe = st.slider('What do you pay per kWh for electricity?', max_value = 1.0, value = .2)
-st.write("Note: we do not account for PCE, block rates, or demand charges, which could make the electric costs higher than expected from this simple calculator.")
+
 total_cost_ev = coe*tmy.kwh.sum()
 
 #greenhouse gas emissions from electricity:
