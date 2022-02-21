@@ -86,7 +86,8 @@ if (dfu['PCE'].loc[dfu['ID']==util].iloc[0]==dfu['PCE'].loc[dfu['ID']==util].ilo
     rate_def = dfu['PCE'].loc[dfu['ID']==util].iloc[0]
 else: #otherwise dig down for the non-PCE adjusted rate
     rate_def = dfu['Blocks'].loc[dfu['ID']==util].iloc[0][0][1] #at least for fairbanks this works to get a per kWh rate from the database - may not always work!
-st.write("rate default datatype",type(rate_def),"rate default", rate_def)
+
+rate_def = float(rate_def) #the slider later didn't like the numpy.float64
 cpkwh_default = dfu['CO2'].loc[dfu['ID']==util].iloc[0]/2.2 #find the CO2 per kWh for the community and divide by 2.2 to change pounds to kg
 cpkwh_default = float(cpkwh_default) 
 st.write("")
