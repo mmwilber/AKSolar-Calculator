@@ -122,7 +122,7 @@ if nm:
     
     #some calulations:
     max_size = usage/unit_prod #element-wise array calc
-    def_size = min(max_size)
+    def_size = float(min(max_size))
 size = st.slider('Size of the system in kW(the default here is the system with the best payback if you have net metering)?', max_value = 25, value = def_size)
 prod = size*unit_prod 
 
