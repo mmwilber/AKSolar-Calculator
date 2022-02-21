@@ -132,7 +132,7 @@ tcredit = cost_sys * taxr
 st.write("Expected Tax Credit: $", tcredit)
 net_cost = cost_sys - tcredit
 st.write("Expected Net System Cost: $", net_cost)
-st.write("Expected System Production in kWh:", sum(prod))
+st.write("Expected System Production in kWh:", round(sum(prod),1))
 if nm:
     save = rate*prod #only true if net metering and for this prod l.t. consumpt
     #for net metered - where prod < usage, save = rate*prod, where prod > usage, save = usage*rate + copa*(prod - usage)
