@@ -32,10 +32,10 @@ def get_df(file_path):
     return df
 
 #load a file with tmy summary info including the best tilt for a solar panel:
-df = pd.read_csv('/drive/My Drive/Electric Vehicles/EV Solar/AKtmy_summary.csv', parse_dates = True, index_col = 'tmy_id')
+df = pd.read_csv('AKtmy_summary.csv', parse_dates = True, index_col = 'tmy_id')
 
 #load a file with pvwatts monthly solar production for tmy3 stations in AK, based on tilt:
-results_df = pd.read_csv('/drive/My Drive/Electric Vehicles/EV Solar/AKtmy_monthlyprod.csv', parse_dates = True, index_col = 0)
+results_df = pd.read_csv('AKtmy_monthlyprod.csv', parse_dates = True, index_col = 0)
 #these are the tilts used:
 #tilts = [14,18.4,22.6,26.6,30,45,df['best_tilt'].loc[df.index == tmyid].iloc[0],90] 
 
