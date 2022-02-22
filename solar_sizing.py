@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 import requests
 
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # Most of the data files are located remotely and are retrieved via
 # an HTTP request.  The function below is used to retrieve the files,
