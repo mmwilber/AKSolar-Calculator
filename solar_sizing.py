@@ -106,7 +106,7 @@ if nm:
     st.write("Note: we do not account for PCE limits, block rates, or demand charges, which could change the results.")
     copa = st.slider('What is the avoided fuel cost for your utility?', max_value = .20, value = .08)
     st.write("To find this, check at your utility's website or call the utility customer service. This is the amount assumed to be payed for electricity sold back to your utility.")
-    st.write("Input your monthly electric usage in kWh (from your bills or utility member portal) here:")
+    st.write("Input your monthly electric usage in kWh (from your bills or utility member portal) here (you can type in values, you don't have to use the +/-):")
     u1 = st.number_input('January:', min_value = 0, value = 300)
     u2 = st.number_input('Febuary:',min_value = 0,value = 300)
     u3 = st.number_input('March:',min_value = 0, value = 300)
@@ -150,7 +150,7 @@ if nm:
     st.write("Reduction in Grid Energy Usage:", round(grid_red,1),"%")
 
 
-    x = ['J','F','M','A','M','J','J','A','S','O','N','D']
+    x = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     fig, ax = plt.subplots()
     ax.bar(x,prod, width=-0.35, align='edge', label = 'Solar Production')
     ax.bar(x,usage, width=0.35, align='edge', label = 'Household Consumption')
