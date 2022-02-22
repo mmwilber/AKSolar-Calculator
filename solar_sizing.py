@@ -46,6 +46,7 @@ st.write("This is a calculator to find optimal sizing and economic payback for a
 
 st.write("Community and Utility data are taken from http://ak-energy-data.analysisnorth.com/ ")
 st.write("Solar modeling is done using https://pvwatts.nrel.gov/ ")
+st.write("This calculator assumes no shading and does not account for snow coverage.  Real-life installations will likely not reach this ideal.")
 
 #location
 #get the Alaska city data
@@ -68,7 +69,7 @@ st.write("")
 taxr = st.selectbox('Select a solar tax credit amount, 26% for installation in 2022, 22% for 2023:', [26,22] )/100 #make a drop down list and get choice.26 #26 in 2022, 22% in 2023
 
 life = st.slider('What is the life of your system in years?', max_value = 30, value = 20)
-cost = st.slider('What is the cost of your system in $ per installed watt (this may depend on the size of the system)?', max_value = 9, value = 3)
+cost = st.slider('What is the cost of your system in $ per installed watt (this may depend on the size of the system)?', max_value = 9.00, value = 3.00)
 def_size = 3.0 #will need this later if not a net metered system
 
 
