@@ -150,8 +150,18 @@ if nm:
     st.write("Reduction in Grid Energy Usage:", round(grid_red,1),"%")
 
 
+    x = ['J','F','M','A','M','J','J','A','S','O','N','D']
+    fig, ax = plt.subplots()
+    ax.bar(x,prod, width=-0.35, align='edge', label = 'Solar Production')
+    ax.bar(x,usage, width=0.35, align='edge', label = 'Household Consumption')
+    # Add the axis labels
+    ax.set_xlabel('Month')
+    ax.set_ylabel('kWh')
 
-
+    # Add in a legend and title
+    ax.legend(loc = 'upper right')
+    #ax.title('')
+    st.pyplot(fig)
 
 
 
