@@ -153,8 +153,9 @@ if nm:
 
     x = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     fig, ax = plt.subplots()
-    ax.bar(x,prod, width=-0.35, align='edge', label = 'Solar Production')
     ax.bar(x,usage, width=0.35, align='edge', label = 'Household Consumption')
+    ax.bar(x,prod, width=-0.35, align='edge', label = 'Solar Production')
+    
     # Add the axis labels
     ax.set_xlabel('Month')
     ax.set_ylabel('kWh')
