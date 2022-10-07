@@ -66,7 +66,10 @@ tilts = [14,18.4,22.6,26.6,30,45,df['best_tilt'].loc[df.index == tmyid].iloc[0],
 tilt = st.selectbox('Choose a tilt in degrees for your panels:', tilts ) #make a drop down list and get choice
 st.write("Note: the first 4 choices correspond to roof slopes of 3 in 12, 4 in 12 etc.  The second to last choice is the optimum tilt for your location according to NREL's PVWatts calculator. 90 degrees is vertical.")
 st.write("")
-taxr = st.selectbox('Select a solar tax credit amount, 26% for installation in 2022, 22% for 2023:', [26,22] )/100 #make a drop down list and get choice.26 #26 in 2022, 22% in 2023
+#the below has changed with the passage of the Inflation reduction Act in 2022...
+#taxr = st.selectbox('Select a solar tax credit amount, 26% for installation in 2022, 22% for 2023:', [26,22] )/100 #make a drop down list and get choice.26 #26 in 2022, 22% in 2023
+st.write("A solar tax credit of 30% is included in the calculations below.")
+taxr = .3
 
 life = st.slider('What is the life of your system in years?', max_value = 30, value = 20)
 cost = st.slider('What is the cost of your system in $ per installed watt (this may depend on the size of the system)?', max_value = 9.00, value = 3.00)
